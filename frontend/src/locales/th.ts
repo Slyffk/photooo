@@ -1,0 +1,116 @@
+export const th = {
+  // Common
+  appName: 'HARU MOMENTS',
+  tagline: 'โฟโต้บูธเกาหลี เซลฟี่สตูดิโออัตโนมัติ',
+  back: 'ย้อนกลับ',
+  next: 'ถัดไป',
+  confirm: 'ยืนยัน',
+  cancel: 'ยกเลิก',
+  retake: 'ถ่ายใหม่',
+  start: 'เริ่มต้นถ่ายภาพ',
+  loading: 'กำลังประมวลผล...',
+  ready: 'ระบบพร้อมใช้งาน',
+  notReady: 'กรุณารอสักครู่',
+  admin: 'ผู้ดูแลระบบ',
+
+  // Home Screen
+  homeTitle: 'HARU PHOTO BOOTH',
+  homeSubtitle: 'บันทึกความทรงจำสุดพิเศษของคุณกับสไตล์เกาหลีแท้ๆ',
+  homeTouchInstruction: 'แตะหน้าจอเพื่อเริ่มต้น',
+  systemStatusCamera: 'กล้อง',
+  systemStatusPrinter: 'เครื่องพิมพ์',
+  systemStatusReady: 'พร้อมใช้งาน',
+  systemStatusOffline: 'ออฟไลน์',
+
+  // Mode Selection
+  modeTitle: 'เลือกรูปแบบภาพถ่าย',
+  modeSubtitle: 'เลือกเลย์เอาต์ที่คุณชอบมากที่สุด',
+  stripMode: 'โฟโต้สตริป 4 ช็อต',
+  stripDesc: 'สตริปแนวตั้งยอดนิยม 4 ช็อต สไตล์ Life4Cuts',
+  singleMode: 'ภาพเดี่ยว พอร์ตเทรต',
+  singleDesc: 'ภาพเดี่ยวคุณภาพสูง คมชัด สไตล์โพรไฟล์',
+  collageMode: 'โฟโต้คอลลาจ (2x2)',
+  collageDesc: 'คอลลาจ 4 ช่องตาราง ดีไซน์ชิค ทันสมัย',
+  groupMode: 'กรุ๊ปช็อต แก๊งเพื่อน',
+  groupDesc: 'มุมกว้างสำหรับกลุ่มเพื่อน พร้อมเวลานับถอยหลังพอเหมาะ',
+
+  // Template Selection
+  templateTitle: 'เลือกกรอบและธีมสี',
+  templateSubtitle: 'มีธีมพาสเทล มินิมอล และวันพิเศษมากมายให้เลือก',
+  catAll: 'ทั้งหมด',
+  catMinimal: 'มินิมอล',
+  catPastel: 'พาสเทล',
+  catCute: 'น่ารักสดใส',
+  catBirthday: 'วันเกิด',
+  catAnniversary: 'ความรัก',
+  catSeasonal: 'เทศกาล',
+
+  // Camera Capture
+  cameraTitle: 'เตรียมตัวให้พร้อม!',
+  cameraLookAtLens: 'มองตรงไปที่เลนส์กล้อง ยิ้มกว้างๆ',
+  cameraShotProgress: 'ภาพที่ {current} จากทั้งหมด {total}',
+  countdownSeconds: 'วินาที',
+  capturingNow: 'ชีสสสส!',
+  cameraError: 'ไม่สามารถเปิดกล้องได้ กำลังเปิดโหมดภาพจำลองเพื่อทดสอบ',
+  switchCamera: 'สลับกล้อง',
+
+  // Photo Selection
+  selectTitle: 'เลือกภาพที่ถูกใจ',
+  selectSubtitle: 'ตรวจสอบภาพที่ถ่าย แตะเพื่อสลับลำดับ หรือเลือกถ่ายใหม่',
+  reorderTip: 'แตะลูกศรเพื่อเลื่อนลำดับภาพในกรอบ',
+  retakeShot: 'ถ่ายช็อตนี้ใหม่',
+  retakeAll: 'ถ่ายใหม่ทั้งหมด',
+  confirmSelection: 'ยืนยันภาพชุดนี้',
+
+  // Photo Editor
+  editorTitle: 'แต่งภาพและใส่ฟิลเตอร์',
+  editorSubtitle: 'ปรับโทนสี ใส่สติกเกอร์เกาหลี หรือข้อความน่ารักๆ',
+  filters: 'ฟิลเตอร์',
+  adjustments: 'ปรับความสว่าง/สี',
+  stickers: 'สติกเกอร์',
+  textAdd: 'ใส่ข้อความ',
+  filterOriginal: 'ต้นฉบับ',
+  filterBw: 'ขาวดำ คลาสสิก',
+  filterWarm: 'อบอุ่น ละมุน',
+  filterCool: 'คูล พาสเทล',
+  filterVintage: 'ฟิล์ม วินเทจ',
+  brightness: 'ความสว่าง',
+  contrast: 'คอนทราสต์',
+  saturation: 'ความสดของสี',
+  rotate: 'หมุนภาพ',
+  addStickerTitle: 'แตะสติกเกอร์เพื่อวางบนภาพ',
+  enterTextPlaceholder: 'พิมพ์ข้อความที่ต้องการ...',
+  textColor: 'สีตัวอักษร',
+  textSize: 'ขนาด',
+  saveAndPreview: 'บันทึกและดูตัวอย่าง',
+
+  // Final Preview
+  previewTitle: 'ภาพผลงานของคุณ',
+  previewSubtitle: 'ตรวจสอบความเรียบร้อยก่อนทำการพิมพ์และรับไฟล์',
+  editAgain: 'กลับไปแก้ไข',
+  proceedToPrint: 'พิมพ์และรับไฟล์ภาพ',
+
+  // Print & Download
+  printAndDownloadTitle: 'รับภาพถ่ายของคุณ',
+  printAndDownloadSubtitle: 'พิมพ์ภาพใบจริง และสแกน QR Code เพื่อบันทึกรูปเข้าสมาร์ทโฟน',
+  printCardTitle: '1. พิมพ์ภาพถ่าย',
+  printCopies: 'จำนวนชุดที่จะพิมพ์',
+  paperSizeLabel: 'ขนาดกระดาษ',
+  printerNameLabel: 'เครื่องพิมพ์',
+  printButton: 'สั่งพิมพ์ภาพทันที',
+  printingInProgress: 'กำลังส่งคำสั่งพิมพ์ไปยังเครื่องพิมพ์...',
+  printSuccess: 'พิมพ์สำเร็จ! กรุณารับภาพที่ช่องรับด้านล่าง',
+  printError: 'เครื่องพิมพ์ขัดข้อง กรุณาติดต่อพนักงาน',
+  downloadCardTitle: '2. ดาวน์โหลดรูปดิจิทัล',
+  downloadInstruction: 'ใช้กล้องมือถือสแกน QR Code ด้านล่าง เพื่อรับไฟล์รูปภาพความละเอียดสูง (JPG & PNG)',
+  downloadOffline: 'ระบบอยู่ในโหมดออฟไลน์ ภาพถูกบันทึกไว้ในเครื่องแล้ว',
+  qrExpiringNote: 'ลิงก์จะหมดอายุภายใน 24 ชั่วโมง เพื่อความปลอดภัยของข้อมูล',
+  finishSession: 'เสร็จสิ้นการใช้งาน',
+
+  // Session Complete
+  completeTitle: 'ขอบคุณที่มาสร้างความทรงจำกับเรา!',
+  completeSubtitle: 'หวังว่าคุณจะมีความสุขกับภาพถ่ายชุดนี้นะคะ',
+  autoReturnNotice: 'ระบบจะกลับสู่หน้าหลักอัตโนมัติใน {seconds} วินาที',
+  returnHomeNow: 'กลับสู่หน้าหลักทันที',
+  cleanSessionNotice: 'ระบบได้ลบข้อมูลส่วนบุคคลชั่วคราวเรียบร้อยแล้ว'
+};

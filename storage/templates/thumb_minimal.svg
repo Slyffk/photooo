@@ -1,0 +1,9 @@
+<svg width="400" height="600" viewBox="0 0 400 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="600" rx="24" fill="#FBF9F5" stroke="#E8E3D9" stroke-width="4"/>
+  <rect x="35" y="35" width="330" height="110" rx="14" fill="#EAE6DF"/>
+  <rect x="35" y="165" width="330" height="110" rx="14" fill="#EAE6DF"/>
+  <rect x="35" y="295" width="330" height="110" rx="14" fill="#EAE6DF"/>
+  <rect x="35" y="425" width="330" height="110" rx="14" fill="#EAE6DF"/>
+  <text x="200" y="565" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="800" letter-spacing="4" fill="#2D2D2D" text-anchor="middle">HARU STUDIO</text>
+  <text x="200" y="582" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="600" letter-spacing="2" fill="#888888" text-anchor="middle">MINIMAL CREAM</text>
+</svg>

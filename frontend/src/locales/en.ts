@@ -1,0 +1,116 @@
+export const en = {
+  // Common
+  appName: 'HARU MOMENTS',
+  tagline: 'Korean Self Photo Studio & Memory Kiosk',
+  back: 'Back',
+  next: 'Next',
+  confirm: 'Confirm',
+  cancel: 'Cancel',
+  retake: 'Retake',
+  start: 'Touch to Start',
+  loading: 'Processing...',
+  ready: 'System Ready',
+  notReady: 'Please wait...',
+  admin: 'Admin',
+
+  // Home Screen
+  homeTitle: 'HARU PHOTO BOOTH',
+  homeSubtitle: 'Capture your aesthetic moments with genuine Korean studio vibes',
+  homeTouchInstruction: 'Touch the screen anywhere to start',
+  systemStatusCamera: 'Camera',
+  systemStatusPrinter: 'Printer',
+  systemStatusReady: 'Ready',
+  systemStatusOffline: 'Offline',
+
+  // Mode Selection
+  modeTitle: 'Select Photo Mode',
+  modeSubtitle: 'Choose your favorite layout style',
+  stripMode: '4-Cut Photo Strip',
+  stripDesc: 'Aesthetic vertical 4-cut strip, classic Life4Cuts style',
+  singleMode: 'Signature Portrait',
+  singleDesc: 'High-definition single portrait with custom aesthetic framing',
+  collageMode: '2x2 Photo Collage',
+  collageDesc: 'Chic 4-panel grid layout with pastel aesthetic borders',
+  groupMode: 'Group & Friends',
+  groupDesc: 'Wide framing designed for fun group shots with friends',
+
+  // Template Selection
+  templateTitle: 'Choose Your Template',
+  templateSubtitle: 'Select from minimal, pastel, cute, or special occasion themes',
+  catAll: 'All',
+  catMinimal: 'Minimal',
+  catPastel: 'Pastel',
+  catCute: 'Cute & Fun',
+  catBirthday: 'Birthday',
+  catAnniversary: 'Love',
+  catSeasonal: 'Seasonal',
+
+  // Camera Capture
+  cameraTitle: 'Get Ready!',
+  cameraLookAtLens: 'Look directly at the camera lens & strike a pose',
+  cameraShotProgress: 'Shot {current} of {total}',
+  countdownSeconds: 'sec',
+  capturingNow: 'Smile!',
+  cameraError: 'Camera feed unavailable. Operating in simulated preview mode.',
+  switchCamera: 'Switch Camera',
+
+  // Photo Selection
+  selectTitle: 'Pick Your Best Shots',
+  selectSubtitle: 'Review your photos, reorder slots, or retake if needed',
+  reorderTip: 'Tap arrows to rearrange photo order',
+  retakeShot: 'Retake This Shot',
+  retakeAll: 'Retake All',
+  confirmSelection: 'Confirm Selection',
+
+  // Photo Editor
+  editorTitle: 'Edit & Personalize',
+  editorSubtitle: 'Apply Korean beauty filters, cute stickers, and custom captions',
+  filters: 'Filters',
+  adjustments: 'Adjust Tone',
+  stickers: 'Stickers',
+  textAdd: 'Add Text',
+  filterOriginal: 'Original',
+  filterBw: 'B&W Film',
+  filterWarm: 'Warm Glow',
+  filterCool: 'Cool Pastel',
+  filterVintage: 'Retro Vintage',
+  brightness: 'Brightness',
+  contrast: 'Contrast',
+  saturation: 'Saturation',
+  rotate: 'Rotate',
+  addStickerTitle: 'Tap a sticker to add onto your photo',
+  enterTextPlaceholder: 'Enter custom text caption...',
+  textColor: 'Color',
+  textSize: 'Size',
+  saveAndPreview: 'Save & Preview',
+
+  // Final Preview
+  previewTitle: 'Your Photo Composition',
+  previewSubtitle: 'Preview high-resolution print before printing and downloading',
+  editAgain: 'Back to Edit',
+  proceedToPrint: 'Print & Download',
+
+  // Print & Download
+  printAndDownloadTitle: 'Get Your Keepsake',
+  printAndDownloadSubtitle: 'Print physical photo prints and scan QR code for high-res digital files',
+  printCardTitle: '1. Print Physical Photo',
+  printCopies: 'Number of Copies',
+  paperSizeLabel: 'Paper Size',
+  printerNameLabel: 'Printer',
+  printButton: 'Print Photo Now',
+  printingInProgress: 'Sending print job to Windows spooler...',
+  printSuccess: 'Printed! Collect your photo from the tray below',
+  printError: 'Printer error encountered. Please call staff.',
+  downloadCardTitle: '2. Download Digital Files',
+  downloadInstruction: 'Scan this QR Code with your smartphone camera to save original JPG & PNG files directly to your phone (no app required)',
+  downloadOffline: 'Kiosk is currently offline. High-res photo is saved locally.',
+  qrExpiringNote: 'Link expires in 24 hours for customer privacy protection',
+  finishSession: 'Finish & Exit',
+
+  // Session Complete
+  completeTitle: 'Thank You For Visiting!',
+  completeSubtitle: 'We hope you cherish these memories forever',
+  autoReturnNotice: 'Returning to Home screen in {seconds} seconds',
+  returnHomeNow: 'Return to Home',
+  cleanSessionNotice: 'Temporary customer session data safely cleared'
+};

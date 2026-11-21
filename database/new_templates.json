@@ -1,0 +1,336 @@
+[
+  {
+    "id": 1,
+    "name_en": "Vintage Event Ticket 2025",
+    "name_th": "ตั๋วคอนเสิร์ต วินเทจ อีเวนต์",
+    "category": "minimal",
+    "source": "media_1795228955000_67ce7dba.jpg",
+    "overlay": "overlay_ticket.png",
+    "thumb": "thumb_ticket.jpg",
+    "photo_count": 3,
+    "layout_type": "strip_double_3",
+    "slots": [
+      {
+        "x": 42,
+        "y": 178,
+        "width": 282,
+        "height": 155,
+        "radius": 10,
+        "shotIndex": 0
+      },
+      {
+        "x": 42,
+        "y": 358,
+        "width": 282,
+        "height": 155,
+        "radius": 10,
+        "shotIndex": 1
+      },
+      {
+        "x": 42,
+        "y": 538,
+        "width": 282,
+        "height": 155,
+        "radius": 10,
+        "shotIndex": 2
+      },
+      {
+        "x": 406,
+        "y": 178,
+        "width": 282,
+        "height": 155,
+        "radius": 10,
+        "shotIndex": 0
+      },
+      {
+        "x": 406,
+        "y": 358,
+        "width": 282,
+        "height": 155,
+        "radius": 10,
+        "shotIndex": 1
+      },
+      {
+        "x": 406,
+        "y": 538,
+        "width": 282,
+        "height": 155,
+        "radius": 10,
+        "shotIndex": 2
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "name_en": "Honey Lemon Geometric",
+    "name_th": "ฮันนี่ เลมอน เรขาคณิต",
+    "category": "cute",
+    "source": "media_1795228955035_f8ac44ac.jpg",
+    "overlay": "overlay_honeycomb.png",
+    "thumb": "thumb_honeycomb.jpg",
+    "photo_count": 4,
+    "layout_type": "collage_honeycomb",
+    "slots": [
+      {
+        "x": 62,
+        "y": 35,
+        "width": 322,
+        "height": 275,
+        "radius": 16,
+        "shotIndex": 0
+      },
+      {
+        "x": 342,
+        "y": 195,
+        "width": 322,
+        "height": 275,
+        "radius": 16,
+        "shotIndex": 1
+      },
+      {
+        "x": 342,
+        "y": 545,
+        "width": 322,
+        "height": 275,
+        "radius": 16,
+        "shotIndex": 2
+      },
+      {
+        "x": 62,
+        "y": 705,
+        "width": 322,
+        "height": 275,
+        "radius": 16,
+        "shotIndex": 3
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name_en": "Red Postal Stamp Collection",
+    "name_th": "แสตมป์ไปรษณีย์ เรด ล็อกเกอร์",
+    "category": "cute",
+    "source": "media_1795228955665_b23d6957.jpg",
+    "overlay": "overlay_stamp.png",
+    "thumb": "thumb_stamp.jpg",
+    "photo_count": 4,
+    "layout_type": "collage_2x2",
+    "slots": [
+      {
+        "x": 34,
+        "y": 80,
+        "width": 298,
+        "height": 390,
+        "radius": 12,
+        "shotIndex": 0
+      },
+      {
+        "x": 396,
+        "y": 80,
+        "width": 298,
+        "height": 390,
+        "radius": 12,
+        "shotIndex": 1
+      },
+      {
+        "x": 34,
+        "y": 525,
+        "width": 298,
+        "height": 390,
+        "radius": 12,
+        "shotIndex": 2
+      },
+      {
+        "x": 396,
+        "y": 525,
+        "width": 298,
+        "height": 390,
+        "radius": 12,
+        "shotIndex": 3
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "name_en": "December Pine & Black Cat",
+    "name_th": "ต้นสนคริสต์มาส & น้องแมวดำ",
+    "category": "seasonal",
+    "source": "media_1795228955701_a6e8548d.jpg",
+    "overlay": "overlay_cat_pine.png",
+    "thumb": "thumb_cat_pine.jpg",
+    "photo_count": 3,
+    "layout_type": "strip_double_3",
+    "slots": [
+      {
+        "x": 38,
+        "y": 70,
+        "width": 280,
+        "height": 185,
+        "radius": 12,
+        "shotIndex": 0
+      },
+      {
+        "x": 38,
+        "y": 325,
+        "width": 280,
+        "height": 185,
+        "radius": 12,
+        "shotIndex": 1
+      },
+      {
+        "x": 38,
+        "y": 580,
+        "width": 280,
+        "height": 185,
+        "radius": 12,
+        "shotIndex": 2
+      },
+      {
+        "x": 412,
+        "y": 260,
+        "width": 280,
+        "height": 185,
+        "radius": 12,
+        "shotIndex": 0
+      },
+      {
+        "x": 412,
+        "y": 520,
+        "width": 280,
+        "height": 185,
+        "radius": 12,
+        "shotIndex": 1
+      },
+      {
+        "x": 412,
+        "y": 775,
+        "width": 280,
+        "height": 185,
+        "radius": 12,
+        "shotIndex": 2
+      }
+    ]
+  },
+  {
+    "id": 5,
+    "name_en": "Happier Than Ever Meadow",
+    "name_th": "ทุ่งดอกไม้ แฮปปี้เออร์ แดน เอเวอร์",
+    "category": "pastel",
+    "source": "media_1795228955988_530f49c9.jpg",
+    "overlay": "overlay_floral.png",
+    "thumb": "thumb_floral.jpg",
+    "photo_count": 3,
+    "layout_type": "strip_double_3",
+    "slots": [
+      {
+        "x": 46,
+        "y": 88,
+        "width": 282,
+        "height": 185,
+        "radius": 12,
+        "shotIndex": 0
+      },
+      {
+        "x": 46,
+        "y": 340,
+        "width": 282,
+        "height": 185,
+        "radius": 12,
+        "shotIndex": 1
+      },
+      {
+        "x": 46,
+        "y": 595,
+        "width": 282,
+        "height": 185,
+        "radius": 12,
+        "shotIndex": 2
+      },
+      {
+        "x": 404,
+        "y": 92,
+        "width": 282,
+        "height": 185,
+        "radius": 12,
+        "shotIndex": 0
+      },
+      {
+        "x": 404,
+        "y": 344,
+        "width": 282,
+        "height": 185,
+        "radius": 12,
+        "shotIndex": 1
+      },
+      {
+        "x": 404,
+        "y": 598,
+        "width": 282,
+        "height": 185,
+        "radius": 12,
+        "shotIndex": 2
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name_en": "Cozy Check & Black Cat",
+    "name_th": "ลายสก็อต วินเทจ & น้องแมวดำ",
+    "category": "minimal",
+    "source": "media_1795228955949_e79c1030.jpg",
+    "overlay": "overlay_cat_plaid.png",
+    "thumb": "thumb_cat_plaid.jpg",
+    "photo_count": 3,
+    "layout_type": "strip_double_3",
+    "slots": [
+      {
+        "x": 38,
+        "y": 72,
+        "width": 280,
+        "height": 185,
+        "radius": 12,
+        "shotIndex": 0
+      },
+      {
+        "x": 38,
+        "y": 328,
+        "width": 280,
+        "height": 185,
+        "radius": 12,
+        "shotIndex": 1
+      },
+      {
+        "x": 38,
+        "y": 580,
+        "width": 280,
+        "height": 185,
+        "radius": 12,
+        "shotIndex": 2
+      },
+      {
+        "x": 412,
+        "y": 264,
+        "width": 280,
+        "height": 185,
+        "radius": 12,
+        "shotIndex": 0
+      },
+      {
+        "x": 412,
+        "y": 516,
+        "width": 280,
+        "height": 185,
+        "radius": 12,
+        "shotIndex": 1
+      },
+      {
+        "x": 412,
+        "y": 772,
+        "width": 280,
+        "height": 185,
+        "radius": 12,
+        "shotIndex": 2
+      }
+    ]
+  }
+]

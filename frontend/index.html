@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/camera-icon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Smart Photo Booth Kiosk</title>
+    <!-- Fonts: Plus Jakarta Sans for English, Prompt for Thai -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      /* Disable touch callouts, text selection for touch kiosk experience */
+      * {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+      }
+      input, textarea {
+        -webkit-user-select: auto;
+        user-select: auto;
+      }
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #FAF9F6;
+        color: #1A1A1A;
+        overflow: hidden;
+        font-family: 'Plus Jakarta Sans', 'Prompt', sans-serif;
+      }
+      /* Custom scrollbars if any modal needs scrolling */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #F5F3ED;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #C8BEAE;
+        border-radius: 4px;
+      }
+    </style>
+  </head>
+  <body class="bg-cream-50 text-korean-charcoal select-none antialiased">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

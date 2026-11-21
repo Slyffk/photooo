@@ -1,0 +1,9 @@
+<svg width="400" height="600" viewBox="0 0 400 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="600" rx="24" fill="#FFF0F3" stroke="#FFCCD5" stroke-width="4"/>
+  <rect x="35" y="35" width="330" height="110" rx="14" fill="#FFE3E8"/>
+  <rect x="35" y="165" width="330" height="110" rx="14" fill="#FFE3E8"/>
+  <rect x="35" y="295" width="330" height="110" rx="14" fill="#FFE3E8"/>
+  <rect x="35" y="425" width="330" height="110" rx="14" fill="#FFE3E8"/>
+  <text x="200" y="565" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="800" letter-spacing="4" fill="#A83250" text-anchor="middle">HARU STUDIO</text>
+  <text x="200" y="582" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="600" letter-spacing="2" fill="#E05B7C" text-anchor="middle">BABY PINK HEARTS</text>
+</svg>

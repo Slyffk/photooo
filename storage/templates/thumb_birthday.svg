@@ -1,0 +1,9 @@
+<svg width="400" height="600" viewBox="0 0 400 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="600" rx="24" fill="#FFF5EB" stroke="#FFD8A8" stroke-width="4"/>
+  <rect x="35" y="35" width="150" height="230" rx="14" fill="#FFE8CC"/>
+  <rect x="215" y="35" width="150" height="230" rx="14" fill="#FFE8CC"/>
+  <rect x="35" y="290" width="150" height="230" rx="14" fill="#FFE8CC"/>
+  <rect x="215" y="290" width="150" height="230" rx="14" fill="#FFE8CC"/>
+  <text x="200" y="565" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="800" letter-spacing="4" fill="#D9480F" text-anchor="middle">HAPPY BIRTHDAY</text>
+  <text x="200" y="582" font-family="'Plus Jakarta Sans', sans-serif" font-size="10" font-weight="600" letter-spacing="2" fill="#F76707" text-anchor="middle">CELEBRATION 2x2</text>
+</svg>
