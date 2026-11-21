@@ -1,7 +1,10 @@
 import bcrypt from 'bcryptjs';
 import os from 'node:os';
+import fs from 'node:fs';
+import path from 'node:path';
 import { getDatabase } from '../config/database.js';
 import { runMigrations } from './migrations.js';
+import { populateUserTemplates } from './updateTemplates.js';
 
 export function getLocalIpAddress(): string {
   const interfaces = os.networkInterfaces();
@@ -102,6 +105,10 @@ export function seedDatabase(): void {
   // 4. Seed Templates
   const existingTemplates = db.prepare('SELECT COUNT(*) as count FROM templates').get() as { count: number };
   if (existingTemplates.count === 0) {
+    const customConfigPath = path.resolve(__dirname, '../../../database/new_templates.json');
+    if (fs.existsSync(customConfigPath)) {
+      populateUserTemplates();
+    } else {
     const templates = [
       {
         name_en: 'Haru Minimal Cream',
@@ -256,7 +263,8 @@ export function seedDatabase(): void {
         now
       );
     }
-    console.log('Templates seeded.');
+      console.log('Templates seeded.');
+    }
   }
 
   // 5. Seed System Settings
@@ -268,7 +276,7 @@ export function seedDatabase(): void {
     ['completion_timeout_seconds', '30', 'Auto return to home after completion'],
     ['retention_days', '7', 'Number of days to keep session photos before cleanup'],
     ['qr_expiration_hours', '24', 'Hours before QR download token expires'],
-    ['default_printer', 'Microsoft Print to PDF', 'Target Windows printer name'],
+    ['default_printer', process.env.DEFAULT_PRINTER || 'EPSON L8050 Series', 'Target Windows printer name'],
     ['default_paper_size', '4x6', 'Default paper size (4x6, 2x6, A4)'],
     ['default_copies', '1', 'Default print copies'],
     ['sound_enabled', 'true', 'Enable audio shutter and countdown beeps'],

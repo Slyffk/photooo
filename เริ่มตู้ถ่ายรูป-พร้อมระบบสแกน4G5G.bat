@@ -9,7 +9,7 @@ echo ========================================================================
 echo.
 echo   [1/3] กำลังเริ่มต้นระบบหลังบ้าน (Backend Server) พร้อมระบบสแกน 4G/5G...
 cd /d "%~dp0backend"
-start "Haru-Backend-API" /min cmd /c "npx tsx src/index.ts"
+start "Haru-Backend-API" /min cmd /c "npx tsx watch src/index.ts"
 
 timeout /t 3 >nul
 

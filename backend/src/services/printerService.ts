@@ -1,6 +1,7 @@
 import { exec } from 'node:child_process';
 import util from 'node:util';
 import fs from 'node:fs';
+import path from 'node:path';
 import { getDatabase } from '../config/database.js';
 import { broadcastEvent } from './websocketService.js';
 
@@ -223,27 +224,14 @@ class WindowsPrinterService {
       // Escape Windows paths and arguments
       const cleanPath = filePath.replace(/\\/g, '\\\\');
       const cleanPrinter = printerName.replace(/"/g, '`"');
+      const scriptPath = path.resolve(__dirname, '../../../scripts/printImage.ps1').replace(/\\/g, '\\\\');
 
-      // Use PowerShell to dispatch print command to specific printer driver
-      // For images, we can invoke standard print verbs or mspaint print command
-      const psScript = `
-        $printer = "${cleanPrinter}"
-        $file = "${cleanPath}"
-        try {
-          Start-Process -FilePath "mspaint.exe" -ArgumentList "/pt \`"$file\`" \`"$printer\`"" -WindowStyle Hidden -Wait
-          exit 0
-        } catch {
-          exit 1
-        }
-      `;
+      const cmd = `powershell -NoProfile -ExecutionPolicy Bypass -File "${scriptPath}" -FilePath "${cleanPath}" -PrinterName "${cleanPrinter}" -Copies ${copies}`;
 
-      // We attempt execution; in virtual / PDF / test mode or where dialog requires user,
-      // simulate realistic completion without hang
       try {
-        await execPromise(`powershell -NoProfile -Command "${psScript.replace(/\r?\n/g, ' ')}"`, { timeout: 15000 });
+        await execPromise(cmd, { timeout: 30000 });
       } catch (err: any) {
-        // If mspaint or printer driver had dialog prompt or PDF prompt, log accurately
-        console.log(`Print command completed dispatch (Note: ${err.message || 'spooled'})`);
+        console.error(`Print command error: ${err.message || 'spooled'}`);
       }
 
       // Mark completed
