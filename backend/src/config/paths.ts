@@ -8,6 +8,7 @@ export const TEMPLATES_DIR = path.join(STORAGE_ROOT, 'templates');
 export const LOGOS_DIR = path.join(STORAGE_ROOT, 'logos');
 export const STICKERS_DIR = path.join(STORAGE_ROOT, 'stickers');
 export const EXPORTS_DIR = path.join(STORAGE_ROOT, 'exports');
+export const HOTFOLDER_DIR = path.join(STORAGE_ROOT, 'hotfolder');
 export const DATABASE_DIR = path.join(PROJECT_ROOT, 'database');
 export const DATABASE_PATH = path.join(DATABASE_DIR, 'photobooth.sqlite');
 
@@ -19,6 +20,7 @@ export const DATABASE_PATH = path.join(DATABASE_DIR, 'photobooth.sqlite');
   LOGOS_DIR,
   STICKERS_DIR,
   EXPORTS_DIR,
+  HOTFOLDER_DIR,
   DATABASE_DIR,
 ].forEach((dir) => {
   if (!fs.existsSync(dir)) {

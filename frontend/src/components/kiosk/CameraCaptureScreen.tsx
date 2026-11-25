@@ -1,28 +1,30 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { Camera, RefreshCw, Volume2, VolumeX, Sparkles, AlertCircle } from 'lucide-react';
+import { Camera, RefreshCw, Volume2, VolumeX, Sparkles, AlertCircle, CheckCircle2, RotateCcw, Clock } from 'lucide-react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useKiosk } from '../../context/KioskContext';
 import { TouchButton } from '../common/TouchButton';
 import { cameraAdapter, type VideoDeviceInfo } from '../../services/cameraAdapter';
 import { soundService } from '../../services/audioService';
+import { wsClient } from '../../services/websocket';
 
 export const CameraCaptureScreen: React.FC = () => {
   const { t } = useLanguage();
-  const { mode, template, session, addCapturedPhoto, setScreen, capturedPhotos } = useKiosk();
+  const { mode, template, session, addCapturedPhoto, retakeSingleShot, setScreen, capturedPhotos } = useKiosk();
 
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const [cameras, setCameras] = useState<VideoDeviceInfo[]>([]);
   const [selectedCameraId, setSelectedCameraId] = useState<string>('');
-  const [countdownSeconds, setCountdownSeconds] = useState<number>(5);
+  const [countdownSeconds, setCountdownSeconds] = useState<number>(0); // 0 = Instant, 3 = 3s, 5 = 5s
   const [currentCountdown, setCurrentCountdown] = useState<number | null>(null);
-  const [isCapturingSequence, setIsCapturingSequence] = useState<boolean>(false);
-  const [currentShotIndex, setCurrentShotIndex] = useState<number>(1);
+  const [isCapturing, setIsCapturing] = useState<boolean>(false);
   const [flashActive, setFlashActive] = useState<boolean>(false);
   const [soundEnabled, setSoundEnabled] = useState<boolean>(true);
   const [isSimulatedFeed, setIsSimulatedFeed] = useState<boolean>(false);
   const [permissionDenied, setPermissionDenied] = useState<boolean>(false);
   const [latestShotPreview, setLatestShotPreview] = useState<string | null>(null);
+  const [shotNotice, setShotNotice] = useState<string | null>(null);
+  const [isAllDone, setIsAllDone] = useState<boolean>(false);
 
   // Parse template slots to derive exact slot aspect ratio and overlay position
   const templateSlots = React.useMemo(() => {
@@ -35,7 +37,7 @@ export const CameraCaptureScreen: React.FC = () => {
   }, [template]);
 
   // Target total shots accurately derived from template slots or session
-  const totalShots = (() => {
+  const totalShots = React.useMemo(() => {
     if (templateSlots.length > 0) {
       const indices = new Set(templateSlots.map((s: any) => (s.shotIndex !== undefined ? s.shotIndex : null)));
       indices.delete(null);
@@ -43,15 +45,18 @@ export const CameraCaptureScreen: React.FC = () => {
       return templateSlots.length;
     }
     return session?.photo_count || (mode === 'single' ? 1 : mode === 'group' ? 3 : 4);
-  })();
+  }, [templateSlots, session, mode]);
 
-  // Current active slot for the currentShotIndex (1-based: 1..totalShots)
+  // Next slot index to capture (1-based: 1..totalShots)
+  const currentShotIndex = Math.min(capturedPhotos.length + 1, totalShots);
+
+  // Current active slot for the currentShotIndex
   const activeSlot = React.useMemo(() => {
     if (templateSlots.length === 0) return null;
-    const shotIdx = (isCapturingSequence ? currentShotIndex : 1) - 1;
+    const shotIdx = currentShotIndex - 1;
     const matched = templateSlots.find((s: any) => s.shotIndex === shotIdx);
     return matched || templateSlots[shotIdx % templateSlots.length] || templateSlots[0];
-  }, [templateSlots, isCapturingSequence, currentShotIndex]);
+  }, [templateSlots, currentShotIndex]);
 
   const canvasWidth = template?.canvas_width || 726;
   const canvasHeight = template?.canvas_height || 1024;
@@ -109,53 +114,96 @@ export const CameraCaptureScreen: React.FC = () => {
   };
 
   // Trigger flash effect
-  const triggerFlash = () => {
+  const triggerFlash = useCallback(() => {
     setFlashActive(true);
     setTimeout(() => setFlashActive(false), 450);
-  };
+  }, []);
 
-  // Perform single shot capture
-  const takeSingleShot = useCallback(async (shotIndex: number) => {
-    try {
-      soundService.playShutterSound();
+  // Listen for WebSocket photo_captured event (fired by Canon Hotfolder or API upload)
+  useEffect(() => {
+    const unsub = wsClient.on('photo_captured', (payload: any) => {
+      if (!session || payload.sessionId !== session.id) return;
+
       triggerFlash();
+      soundService.playShutterSound();
+
+      if (payload.dataUrl || payload.filePath) {
+        setLatestShotPreview(payload.dataUrl || payload.filePath);
+      }
+
+      const notice = t.cameraShotDoneToast.replace('{shot}', String(payload.shotIndex));
+      setShotNotice(notice);
+      setTimeout(() => setShotNotice(null), 2500);
+
+      // Check if total shots reached
+      if (payload.shotIndex >= totalShots || (capturedPhotos.length + 1) >= totalShots) {
+        setIsAllDone(true);
+        setTimeout(() => {
+          cameraAdapter.stopStream();
+          setScreen('PHOTO_SELECT');
+        }, 1500);
+      }
+    });
+
+    return () => unsub();
+  }, [session, totalShots, capturedPhotos.length, triggerFlash, t, setScreen]);
+
+  // Manual Trigger (Spacebar, Enter, or Touchscreen Shutter Button)
+  const triggerManualShot = useCallback(async () => {
+    if (isCapturing || isAllDone || capturedPhotos.length >= totalShots) return;
+    setIsCapturing(true);
+
+    try {
+      // Optional Countdown
+      if (countdownSeconds > 0) {
+        for (let sec = countdownSeconds; sec > 0; sec--) {
+          setCurrentCountdown(sec);
+          soundService.playCountdownBeep(sec === 1);
+          await new Promise((r) => setTimeout(r, 1000));
+        }
+        setCurrentCountdown(null);
+      }
+
+      triggerFlash();
+      soundService.playShutterSound();
 
       const base64 = cameraAdapter.captureFrame();
       setLatestShotPreview(base64);
 
-      await addCapturedPhoto(shotIndex, base64);
+      await addCapturedPhoto(currentShotIndex, base64);
     } catch (err) {
-      console.error('Error during frame capture:', err);
-    }
-  }, [addCapturedPhoto]);
-
-  // Main capture loop sequence
-  const startCaptureSequence = async () => {
-    if (isCapturingSequence) return;
-    setIsCapturingSequence(true);
-
-    for (let shot = 1; shot <= totalShots; shot++) {
-      setCurrentShotIndex(shot);
-
-      // Countdown loop
-      for (let sec = countdownSeconds; sec > 0; sec--) {
-        setCurrentCountdown(sec);
-        soundService.playCountdownBeep(sec === 1);
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-      }
-
+      console.error('Error during manual shot:', err);
+    } finally {
+      setIsCapturing(false);
       setCurrentCountdown(null);
-      await takeSingleShot(shot);
-
-      // Brief pause between shots if more shots remain
-      if (shot < totalShots) {
-        await new Promise((resolve) => setTimeout(resolve, 1200));
-      }
     }
+  }, [isCapturing, isAllDone, capturedPhotos.length, totalShots, countdownSeconds, currentShotIndex, triggerFlash, addCapturedPhoto]);
 
-    setIsCapturingSequence(false);
-    cameraAdapter.stopStream();
-    setScreen('PHOTO_SELECT');
+  // Keyboard shortcut listener: Spacebar or Enter triggers shot
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === 'Space' || e.key === ' ' || e.code === 'Enter') {
+        e.preventDefault();
+        triggerManualShot();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [triggerManualShot]);
+
+  // Retake previous shot
+  const handleRetakeLast = async () => {
+    if (capturedPhotos.length === 0 || isCapturing) return;
+    const lastPhoto = capturedPhotos[capturedPhotos.length - 1];
+    if (lastPhoto) {
+      await retakeSingleShot(lastPhoto.id);
+      setIsAllDone(false);
+      setLatestShotPreview(
+        capturedPhotos.length > 1
+          ? capturedPhotos[capturedPhotos.length - 2].dataUrl || capturedPhotos[capturedPhotos.length - 2].file_path
+          : null
+      );
+    }
   };
 
   return (
@@ -165,16 +213,45 @@ export const CameraCaptureScreen: React.FC = () => {
         <div className="fixed inset-0 bg-white z-50 pointer-events-none animate-flash" />
       )}
 
-      {/* Top Bar with Camera Controls */}
+      {/* Top Bar with Camera Controls & Photographer Status */}
       <div className="flex-shrink-0 flex items-center justify-between z-10 mb-2">
         <div className="flex items-center gap-3">
-          <div className="px-4 py-2 rounded-2xl bg-white/90 shadow-soft border border-cream-200 flex items-center gap-2">
+          {/* Active Shot Badge */}
+          <div className="px-4 py-2 rounded-2xl bg-white/95 shadow-soft border border-cream-200 flex items-center gap-2.5">
             <span className="w-3 h-3 rounded-full bg-rose-500 animate-pulse" />
             <span className="text-sm font-black text-korean-charcoal tracking-wide">
               {t.cameraShotProgress
-                .replace('{current}', String(isCapturingSequence ? currentShotIndex : Math.min(1, totalShots)))
+                .replace('{current}', String(Math.min(currentShotIndex, totalShots)))
                 .replace('{total}', String(totalShots))}
             </span>
+          </div>
+
+          {/* Shot Progress Dots */}
+          <div className="hidden sm:flex items-center gap-1.5 bg-white/80 px-3 py-1.5 rounded-2xl border border-cream-200 shadow-soft">
+            {Array.from({ length: totalShots }).map((_, idx) => {
+              const shotNum = idx + 1;
+              const isCaptured = shotNum < currentShotIndex;
+              const isCurrent = shotNum === currentShotIndex;
+
+              return (
+                <div
+                  key={shotNum}
+                  className={`flex items-center gap-1 px-2.5 py-1 rounded-xl text-xs font-black transition-all ${
+                    isCaptured
+                      ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+                      : isCurrent
+                      ? 'bg-korean-charcoal text-white ring-2 ring-korean-butter scale-105'
+                      : 'bg-neutral-100 text-neutral-400'
+                  }`}
+                >
+                  {isCaptured ? (
+                    <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  ) : (
+                    <span>{shotNum}</span>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
           {isSimulatedFeed && (
@@ -184,7 +261,7 @@ export const CameraCaptureScreen: React.FC = () => {
               title="คลิกเพื่อเชื่อมต่อกล้องจริง"
             >
               <Camera className="w-4 h-4 text-amber-700 animate-pulse" />
-              <span>โหมดจำลอง (คลิกเพื่อเชื่อมต่อกล้องจริง)</span>
+              <span>โหมดจำลอง</span>
             </button>
           )}
 
@@ -196,7 +273,15 @@ export const CameraCaptureScreen: React.FC = () => {
           )}
         </div>
 
-        {/* Timer selector & Camera toggle */}
+        {/* Central Photographer Instruction Pill */}
+        <div className="hidden md:flex items-center gap-2 px-4 py-2 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/80 shadow-soft">
+          <Camera className="w-4 h-4 text-amber-600 animate-bounce" />
+          <span className="text-xs font-black text-amber-900 tracking-wide">
+            {t.cameraPhotographerPrompt}
+          </span>
+        </div>
+
+        {/* Timer selector & Controls */}
         <div className="flex items-center gap-3">
           {/* Sound Toggle */}
           <button
@@ -211,12 +296,12 @@ export const CameraCaptureScreen: React.FC = () => {
             {soundEnabled ? <Volume2 className="w-5 h-5" /> : <VolumeX className="w-5 h-5 text-neutral-400" />}
           </button>
 
-          {/* Countdown Buttons (3s, 5s, 10s) */}
+          {/* Countdown Buttons (0s ทันที, 3s, 5s) */}
           <div className="flex items-center bg-white/90 p-1.5 rounded-2xl border border-cream-200 shadow-soft gap-1">
-            {[3, 5, 10].map((sec) => (
+            {[0, 3, 5].map((sec) => (
               <button
                 key={sec}
-                disabled={isCapturingSequence}
+                disabled={isCapturing}
                 onClick={() => setCountdownSeconds(sec)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   countdownSeconds === sec
@@ -224,7 +309,7 @@ export const CameraCaptureScreen: React.FC = () => {
                     : 'text-neutral-500 hover:text-neutral-800'
                 }`}
               >
-                {sec}s
+                {sec === 0 ? 'ทันที' : `${sec}s`}
               </button>
             ))}
           </div>
@@ -232,7 +317,7 @@ export const CameraCaptureScreen: React.FC = () => {
           {/* Camera switcher if multiple detected */}
           {cameras.length > 1 && (
             <button
-              disabled={isCapturingSequence}
+              disabled={isCapturing}
               onClick={() => {
                 const currentIndex = cameras.findIndex((c) => c.deviceId === selectedCameraId);
                 const nextDevice = cameras[(currentIndex + 1) % cameras.length];
@@ -314,9 +399,18 @@ export const CameraCaptureScreen: React.FC = () => {
           </div>
 
           {/* Floating Slot Badge */}
-          <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 px-3 py-1 rounded-full bg-black/60 backdrop-blur-md text-white text-[11px] font-black tracking-wider uppercase border border-white/20">
-            ช็อตที่ {isCapturingSequence ? currentShotIndex : 1} / {totalShots}
+          <div className="absolute top-3 left-1/2 -translate-x-1/2 z-20 px-4 py-1.5 rounded-full bg-black/70 backdrop-blur-md text-white text-xs font-black tracking-wider uppercase border border-white/20 flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+            <span>ช่องที่ {currentShotIndex} / {totalShots}</span>
           </div>
+
+          {/* Toast Notification when photo captured */}
+          {shotNotice && (
+            <div className="absolute top-14 left-1/2 -translate-x-1/2 z-30 px-5 py-2.5 rounded-2xl bg-emerald-500/95 text-white text-sm font-black shadow-glow animate-pop flex items-center gap-2">
+              <CheckCircle2 className="w-5 h-5 text-white" />
+              <span>{shotNotice}</span>
+            </div>
+          )}
 
           {/* Giant Countdown Overlay */}
           {currentCountdown !== null && (
@@ -332,10 +426,30 @@ export const CameraCaptureScreen: React.FC = () => {
             </div>
           )}
 
+          {/* Completion Overlay */}
+          {isAllDone && (
+            <div className="absolute inset-0 z-40 flex items-center justify-center bg-black/60 backdrop-blur-sm animate-pop">
+              <div className="bg-white rounded-3xl p-8 max-w-md text-center shadow-2xl border-4 border-korean-butter flex flex-col items-center gap-3">
+                <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 mb-1">
+                  <Sparkles className="w-8 h-8 animate-spin" />
+                </div>
+                <h3 className="text-2xl font-black text-korean-charcoal">
+                  {t.cameraAllShotsDone.replace('{total}', String(totalShots))}
+                </h3>
+                <p className="text-sm font-medium text-neutral-500">
+                  {t.loading}
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Latest Captured Thumbnail Pip */}
-          {latestShotPreview && !currentCountdown && (
-            <div className="absolute bottom-4 right-4 z-20 w-24 h-16 rounded-xl overflow-hidden border-2 border-white shadow-glow animate-pop">
-              <img src={latestShotPreview} alt="Captured shot" className="w-full h-full object-cover" />
+          {latestShotPreview && !currentCountdown && !isAllDone && (
+            <div className="absolute bottom-4 right-4 z-20 w-24 h-24 rounded-2xl overflow-hidden border-2 border-white shadow-glow animate-pop bg-neutral-900">
+              <img src={latestShotPreview} alt="Captured shot preview" className="w-full h-full object-cover" />
+              <div className="absolute bottom-1 right-1 bg-black/75 px-1.5 py-0.5 rounded text-[10px] font-bold text-white">
+                ช็อต #{capturedPhotos.length}
+              </div>
             </div>
           )}
         </div>
@@ -343,10 +457,11 @@ export const CameraCaptureScreen: React.FC = () => {
 
       {/* Bottom Action Control Bar */}
       <div className="flex-shrink-0 flex items-center justify-between mt-2 pt-2 z-20">
+        {/* Back Button */}
         <TouchButton
           variant="secondary"
           size="md"
-          disabled={isCapturingSequence}
+          disabled={isCapturing || isAllDone}
           onClick={() => {
             cameraAdapter.stopStream();
             setScreen('TEMPLATE_SELECT');
@@ -355,21 +470,47 @@ export const CameraCaptureScreen: React.FC = () => {
           {t.back}
         </TouchButton>
 
-        {/* Main Big Capture Trigger */}
-        <TouchButton
-          variant="primary"
-          size="lg"
-          disabled={isCapturingSequence}
-          onClick={startCaptureSequence}
-          className="px-10 py-3.5 text-lg font-black shadow-touch bg-korean-charcoal text-white hover:bg-neutral-800"
-          icon={<Camera className="w-6 h-6 text-korean-butter" />}
-        >
-          {isCapturingSequence
-            ? `${t.loading} (${currentShotIndex}/${totalShots})`
-            : `${t.start} (${totalShots} ${t.catAll})`}
-        </TouchButton>
+        {/* Center Controls: Main Trigger + Retake Last */}
+        <div className="flex items-center gap-4">
+          {capturedPhotos.length > 0 && !isAllDone && (
+            <TouchButton
+              variant="outline"
+              size="md"
+              disabled={isCapturing}
+              onClick={handleRetakeLast}
+              className="border-neutral-300 text-neutral-700 hover:bg-neutral-100"
+              icon={<RotateCcw className="w-4 h-4 text-neutral-500" />}
+            >
+              {t.cameraRetakePrev}
+            </TouchButton>
+          )}
 
-        <div className="w-24" /> {/* spacer balance */}
+          {/* Main Shutter Button for Photographer / Touch Screen / Spacebar */}
+          <TouchButton
+            variant="primary"
+            size="lg"
+            disabled={isCapturing || isAllDone || capturedPhotos.length >= totalShots}
+            onClick={triggerManualShot}
+            className="px-10 py-3.5 text-lg font-black shadow-touch bg-korean-charcoal text-white hover:bg-neutral-800"
+            icon={<Camera className="w-6 h-6 text-korean-butter" />}
+          >
+            {isCapturing
+              ? `${t.loading}`
+              : isAllDone
+              ? 'ถ่ายครบแล้ว!'
+              : `${t.cameraTriggerManual} (${currentShotIndex}/${totalShots})`}
+          </TouchButton>
+        </div>
+
+        {/* Right Info: Shutter guide hint */}
+        <div className="w-32 text-right">
+          <span className="text-[11px] font-bold text-neutral-400 block">
+            กดชัตเตอร์ Canon
+          </span>
+          <span className="text-[10px] text-neutral-400 block">
+            หรือ Spacebar
+          </span>
+        </div>
       </div>
     </div>
   );

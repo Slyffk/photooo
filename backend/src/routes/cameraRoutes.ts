@@ -1,8 +1,17 @@
 import { Router } from 'express';
 import { cameraManager } from '../services/cameraService.js';
+import { hotfolderService } from '../services/hotfolderService.js';
 import { broadcastEvent } from '../services/websocketService.js';
 
 export const cameraRouter = Router();
+
+// GET /api/camera/hotfolder - Check Canon EOS tethering hotfolder status
+cameraRouter.get('/hotfolder', (req, res) => {
+  res.json({
+    success: true,
+    data: hotfolderService.getStatus()
+  });
+});
 
 // GET /api/camera/status - Check camera service health and capabilities
 cameraRouter.get('/status', async (req, res, next) => {

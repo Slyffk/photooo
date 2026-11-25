@@ -4,11 +4,12 @@ import cors from 'cors';
 import path from 'node:path';
 import dotenv from 'dotenv';
 
-import { STORAGE_ROOT } from './config/paths.js';
+import { STORAGE_ROOT, HOTFOLDER_DIR } from './config/paths.js';
 import { runMigrations } from './database/migrations.js';
 import { seedDatabase, getLocalIpAddress } from './database/seed.js';
 import { initWebSocketServer } from './services/websocketService.js';
 import { startCleanupSchedule } from './services/cleanupService.js';
+import { hotfolderService } from './services/hotfolderService.js';
 import { tunnelService } from './services/tunnelService.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
@@ -96,6 +97,7 @@ try {
   runMigrations();
   seedDatabase();
   startCleanupSchedule();
+  hotfolderService.startWatcher(400);
 } catch (err) {
   console.error('Error during database initialization:', err);
 }
@@ -109,6 +111,7 @@ server.listen(PORT, HOST, () => {
   console.log(`📱 LAN Network IP:    http://${localIp}:${PORT}`);
   console.log(`⚡ WebSocket Stream:   ws://${localIp}:${PORT}/ws`);
   console.log(`💾 Storage Root:      ${STORAGE_ROOT}`);
+  console.log(`📷 Canon Hotfolder:   ${HOTFOLDER_DIR}`);
   console.log(`=======================================================`);
 
   // Start Cloudflare Tunnel automatically for instant 4G/5G mobile QR scanning
@@ -120,6 +123,7 @@ server.listen(PORT, HOST, () => {
 // Graceful shutdown
 const handleExit = () => {
   console.log('\nShutting down photo booth server...');
+  hotfolderService.stopWatcher();
   tunnelService.stopTunnel();
   server.close(() => {
     process.exit(0);

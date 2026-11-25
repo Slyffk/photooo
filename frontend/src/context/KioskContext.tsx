@@ -119,6 +119,36 @@ export const KioskProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     wsClient.connect();
   }, []);
 
+  // Listen for WebSocket photo_captured event (from Canon hotfolder or API upload)
+  useEffect(() => {
+    const unsubscribe = wsClient.on('photo_captured', (payload: any) => {
+      if (!session || payload.sessionId !== session.id) return;
+
+      const newPhoto: CapturedPhoto = {
+        id: payload.photoId,
+        session_id: payload.sessionId,
+        shot_index: payload.shotIndex,
+        file_path: payload.filePath,
+        original_filename: payload.filePath ? payload.filePath.split('/').pop() : 'canon_shot.jpg',
+        width: payload.width || 1920,
+        height: payload.height || 1080,
+        is_selected: 1,
+        sort_order: payload.shotIndex,
+        dataUrl: payload.dataUrl || payload.filePath,
+        created_at: new Date().toISOString()
+      };
+
+      setCapturedPhotos((prev) => {
+        const filtered = prev.filter((p) => p.shot_index !== payload.shotIndex && p.id !== payload.photoId);
+        return [...filtered, newPhoto].sort((a, b) => a.shot_index - b.shot_index);
+      });
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [session]);
+
   // 1. Start new session - goes directly to Template Selection
   const startNewSession = async () => {
     setIsLoading(true);
